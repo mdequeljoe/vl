@@ -1,0 +1,20 @@
+dependencies:
+  - name: vega
+    version: 3.3.0
+    src: htmlwidgets/lib/vega
+    script:
+     - symbol.min.js
+     - promise.min.js
+     - vega.js
+  - name: vega-lite
+    version: 2.3.0
+    src: htmlwidgets/lib/vega-lite
+    script: vega-lite.min.js
+  - name: vega-embed
+    version: 3.1.1
+    src: htmlwidgets/lib/vega-embed
+    script: vega-embed.min.js
+  - name: vega-tooltip
+    version: 3.3.0
+    src: htmlwidgets/lib/vega-tooltip
+    script: vega-tooltip.min.js
