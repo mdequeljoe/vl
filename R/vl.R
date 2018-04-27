@@ -6,7 +6,7 @@
 #'
 #' @export
 vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, width = NULL) {
-  
+
   if (is.character(spec)){
 
     if (!jsonlite::validate(spec)){
@@ -19,40 +19,40 @@ vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, width = 
       cx <- V8::v8()
       spec <- cx$get(sprintf('JSON.stringify(%s)', spec))
     }
-    
-    spec <- jsonlite::fromJSON(spec)
-    
+
+    spec <- jsonlite::fromJSON(spec, simplifyVector = F)
+
     # retrieve data if R object
     if (!length(spec$data$values))
       spec$data$values <- eval(parse(text = data))
   }
-  
+
   if (!length(spec$`$schema`))
     spec$`$schema` <- "https://vega.github.io/schema/vega-lite/v2.json"
-  
+
   # replace '.' with space for variable names
   # need to also check other possibilites
   #  i.e. '..., "repeat" : {"Sepal.Width", ....}, ..."
   # what about url json ?
-  encodings <- unlist(spec$encoding)
-  if (any(grepl("\\.", encodings))){
+
+  if (any(grepl("\\.", unlist(spec)))){
     if ("values" %in% names(spec$data))
       colnames(spec$data$values) <- gsub("\\.", " ", colnames(spec$data$values))
-    
+
     spec <- rm_dots(spec)
   }
-  
+
   if (is.null(embed_opt))
     embed_opt <- list(actions = FALSE)
-  
+
   if (!length(embed_opt$actions))
     embed_opt$actions <- FALSE
-  
+
   params = list(
     spec = jsonlite::toJSON(spec, auto_unbox = TRUE),
     embed_opt = embed_opt
   )
-  
+
 
   # create widget
   htmlwidgets::createWidget(
