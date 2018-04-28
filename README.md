@@ -1,7 +1,7 @@
 # vl
 
 vl provides conveniences for writing vega-lite specifications from R
-(work in progress)
+(work in progress). The preference here is to encourage the use of vega-lite directly in the place of an R interface. 
 
 
 ## Examples
@@ -43,25 +43,7 @@ vl::vl(
 
 When in Rmarkdown, vegalite specifications can be written as inline JS objects:
 
-<pre><code>---
-  output: html_document
----
-
-&#96``{r setup}
-library(vl)
-&#96``
-
-&#96``{vl}
-  {
-    data : {values : iris},
-    mark : 'point',
-    encoding : {
-      x : {field : "Sepal.Length"},
-      y : {field : "Sepal.Width"}
-    }
-  }
-&#96``
-</code></pre>
+![](man/img/rmd_inline.png)
 
 Thanks to RStudio for this [idea](https://github.com/rstudio/r2d3)
 
