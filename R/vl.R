@@ -9,7 +9,9 @@ vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, width = 
 
   if (is.character(spec)){
 
-    if (!jsonlite::validate(spec)){
+    if (file.exists(spec))
+      spec <- paste(readLines(spec), collapse = "\n")
+    else if (!jsonlite::validate(spec)){
       #check if data value refers to R object
       if (grepl("data.*:.*values.*:[\n| ]*", spec)){
         data <- trimws(gsub(".*values.*:[\n| ]*(.*?)[\n| ]*}.*", "\\1", spec))
@@ -23,24 +25,18 @@ vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, width = 
     spec <- jsonlite::fromJSON(spec, simplifyVector = F)
 
     # retrieve data if R object
-    if (!length(spec$data$values))
+    if (!length(spec$data$values) && !length(spec$data$url))
       spec$data$values <- eval(parse(text = data))
   }
 
   if (!length(spec$`$schema`))
     spec$`$schema` <- "https://vega.github.io/schema/vega-lite/v2.json"
 
-  # replace '.' with space for variable names
-  # need to also check other possibilites
-  #  i.e. '..., "repeat" : {"Sepal.Width", ....}, ..."
+
   # what about url json ?
-
-  if (any(grepl("\\.", unlist(spec)))){
-    if ("values" %in% names(spec$data))
-      colnames(spec$data$values) <- gsub("\\.", " ", colnames(spec$data$values))
-
-    spec <- rm_dots(spec)
-  }
+  if (is.data.frame(spec$data$values))
+    if (any(grepl("\\.", colnames(spec$data$values))))
+      spec <- rm_dots(spec, colnames(spec$data$values))
 
   if (is.null(embed_opt))
     embed_opt <- list(actions = FALSE)
@@ -65,16 +61,17 @@ vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, width = 
   )
 }
 
-rm_dots <- function(l){
+rm_dots <- function(l, n){
   lapply(l, function(m){
     if (is.list(m) && !is.data.frame(m)) {
-      if ('field' %in% names(m)) {
-        m$field <- gsub("\\.", " ", m$field)
-        m
-      } else
-        rm_dots(m)
-    } else
+      rm_dots(m, n)
+    } else {
+      if (is.data.frame(m))
+        colnames(m) <- gsub("\\.", " ", colnames(m))
+      else if (m %in% n)
+        m <- gsub("\\.", " ", m)
       m
+    }
   })
 }
 
