@@ -41,12 +41,12 @@ vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, width = 
     spec$data <- list(values = spec$data)
 
   spec <- nm_fields(spec)
+  spec <- set_types(spec)
 
   # what about url json ?
   if (is.data.frame(spec$data$values))
     if (any(grepl("\\.", colnames(spec$data$values))))
       spec <- rm_dots(spec, colnames(spec$data$values))
-
 
   if (is.null(embed_opt))
     embed_opt <- list(actions = FALSE)
@@ -59,7 +59,6 @@ vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, width = 
     embed_opt = embed_opt
   )
 
-  # create widget
   htmlwidgets::createWidget(
     name = 'vl',
     params,
