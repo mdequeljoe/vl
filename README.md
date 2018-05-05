@@ -16,7 +16,7 @@ vl::vl(
     encoding = list(
       x = list(field = "Sepal.Width", type = "Quantitative"),
       y = list(field = "Sepal.Length", type = "Quantitative"),
-      row = list(field = "Species")
+      column = list(field = "Species")
     )
   )
 )
@@ -31,11 +31,12 @@ vl::vl(
     encoding = list(
       x = "Sepal.Width:Q",
       y = "Sepal.Length:Q",
-      row = "Species"
+      column = "Species"
     )
   )
 )
 ```
+![](man/img/Iris.png)
 
 ## Source editing
 
