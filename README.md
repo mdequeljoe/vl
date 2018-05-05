@@ -1,28 +1,12 @@
 # vl
 
 vl provides conveniences for writing vega-lite specifications from R
-(work in progress). The preference here is to encourage the use of vega-lite directly in the place of an R interface. 
+(work in progress). The preference here is to find a middle ground between encouraging the use of vega-lite directly and relying on an R interface. 
 
 
 ## Examples
 
-A vl specification can be expressed as a JS object string (or as JSON):
-
-```r
-vl::vl('{
- data : {values: iris},
- mark : "point",
- encoding : {
-   x : {field : "Sepal.Length"},
-   y : {field : "Sepal.Width"},
-   color : {field : "Species"}
- }
-}')
-
-```
-(Note that one can refer to an existing R object inline without having to `paste` in the object)
-
-or alternatively as an R list object:
+A vl specification can be expressed as its JSON-equivalent R list object:
 
 ```r
 vl::vl(
@@ -30,38 +14,40 @@ vl::vl(
     data = list(values = iris),
     mark = "point",
     encoding = list(
-      x = list(field = "Sepal.Width"),
-      y = list(field = "Sepal.Length"),
+      x = list(field = "Sepal.Width", type = "Quantitative"),
+      y = list(field = "Sepal.Length", type = "Quantitative"),
       row = list(field = "Species")
     )
   )
 )
 ```
+This is a lot of typing. 
+For ease of use this can also be written in a reduced form:
+```r
+vl::vl(
+  list(
+    data = iris,
+    mark = "point",
+    encoding = list(
+      x = "Sepal.Width:Q",
+      y = "Sepal.Length:Q",
+      row = "Species"
+    )
+  )
+)
+```
 
+## Source editing
 
-## Rmarkdown
+### Building off of JSON examples
 
-When in Rmarkdown, vegalite specifications can be written as inline JS objects:
+to do
 
-![](man/img/rmd_inline.png)
+### Templates
 
-Thanks to RStudio for this [idea](https://github.com/rstudio/r2d3)
+to do
 
-
-## Templates
 For quick source editing in RStudio a number of templates are pre-specified (to do) which will print to the active document
 
-```r
-#vl::spec()
-vl::vl('
-{
-  data: { values:  },
-  mark: "",
-  encoding: {
-    x: {field: "" },
-    y: {field: "" },
-  }
-}')
 
-```
 
