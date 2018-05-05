@@ -11,14 +11,19 @@ vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, width = 
 
     if (file.exists(spec))
       spec <- paste(readLines(spec), collapse = "\n")
+
     else if (!jsonlite::validate(spec)){
       #check if data value refers to R object
       if (grepl("data.*:.*values.*:[\n| ]*", spec)){
         data <- trimws(gsub(".*values.*:[\n| ]*(.*?)[\n| ]*}.*", "\\1", spec))
         spec <- gsub(data, "[]", spec)
+      } else if (grepl("data.*:.*[\n| ]*", spec)){
+        data <- trimws(gsub(".*data.*:[\n| ]*(.*?)[\n| ]*,.*", "\\1", spec))
+        spec <- gsub(data, "[]", spec)
       }
 
       cx <- V8::v8()
+
       spec <- cx$get(sprintf('JSON.stringify(%s)', spec))
     }
 
@@ -32,6 +37,8 @@ vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, width = 
   if (!length(spec$`$schema`))
     spec$`$schema` <- "https://vega.github.io/schema/vega-lite/v2.json"
 
+  if (is.data.frame(spec$data))
+    spec$data <- list(values = spec$data)
 
   # what about url json ?
   if (is.data.frame(spec$data$values))
@@ -48,7 +55,6 @@ vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, width = 
     spec = jsonlite::toJSON(spec, auto_unbox = TRUE),
     embed_opt = embed_opt
   )
-
 
   # create widget
   htmlwidgets::createWidget(
