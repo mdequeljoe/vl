@@ -67,21 +67,6 @@ vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, width = 
   )
 }
 
-rm_dots <- function(l, n){
-  lapply(l, function(m){
-    if (is.list(m) && !is.data.frame(m)) {
-      rm_dots(m, n)
-    } else {
-      if (is.data.frame(m))
-        colnames(m) <- gsub("\\.", " ", colnames(m))
-      else if (m %in% n)
-        m <- gsub("\\.", " ", m)
-      m
-    }
-  })
-}
-
-
 #' Shiny bindings for vl
 #'
 #' Output and render functions for using vl within Shiny
