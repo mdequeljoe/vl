@@ -27,7 +27,7 @@ nm_fields <- function(l){
     })
   }
   lapply(l, function(d){
-    if (is.list(d))
+    if (is.list(d) && !is.data.frame(d))
       nm_fields(d)
     else
       d

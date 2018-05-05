@@ -40,10 +40,13 @@ vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, width = 
   if (is.data.frame(spec$data))
     spec$data <- list(values = spec$data)
 
+  spec <- nm_fields(spec)
+
   # what about url json ?
   if (is.data.frame(spec$data$values))
     if (any(grepl("\\.", colnames(spec$data$values))))
       spec <- rm_dots(spec, colnames(spec$data$values))
+
 
   if (is.null(embed_opt))
     embed_opt <- list(actions = FALSE)
