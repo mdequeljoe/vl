@@ -36,7 +36,7 @@ nm_fields <- function(l){
 set_types <- function(l){
   if (any(names(l) == "encoding")){
     l$encoding <- lapply(l$encoding, function(d){
-      if (grepl(":(.)$", d$field)){
+      if (length(d$field) && grepl(":(.)$", d$field)){
         type <- gsub(".*:(.)$", "\\1", d$field)
         d$type <- switch(type,
                          "Q" = "quantitative",
