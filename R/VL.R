@@ -44,7 +44,6 @@ VL$set("private", "add_composition", function(l){
   private$inner <- list()
 })
 VL$set("private", "add", function(l){
-
   #has a composition?
   if (length(names(private$open))){
     #start a new list if we've seen this prop
@@ -144,8 +143,8 @@ for (i in vl_prop$encoding){
 
 #view_spec
 for (i in vl_prop$view_spec){
-  VL$set("public", i, function(x){
-    l <- list(x)
+  VL$set("public", i, function(...){
+    l <- list(list(...))
     names(l) <- this_call()
     private$add(l)
     invisible(self)
