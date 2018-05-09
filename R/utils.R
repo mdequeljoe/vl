@@ -14,6 +14,7 @@ rm_dots <- function(l, n){
 }
 
 nm_fields <- function(l){
+
   if (any(names(l) == "encoding")){
     l$encoding <- lapply(l$encoding, function(d){
       if (is.list(d)){
