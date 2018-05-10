@@ -19,6 +19,7 @@ this_call <- function() {
 vl <- function() VL$new()
 
 VL <- R6::R6Class("VL", public = list(spec = list()))
+
 VL$set("private", "nest", function(l){
   for (i in length(l):2){
     len <- length(l[[i - 1]])
@@ -26,13 +27,16 @@ VL$set("private", "nest", function(l){
   }
   l[1]
 })
+
 VL$set("private", "open", list())
 VL$set("private", "inner", list())
+
 VL$set("private", "update_open", function(){
   len <- length(private$open)
   len_inner <- length(private$open[[len]]) + 1
   private$open[[len]][[len_inner]] <- private$inner
 })
+
 VL$set("private", "add_composition", function(l){
   #check if first composition
   if (length(names(private$open))){
@@ -43,6 +47,7 @@ VL$set("private", "add_composition", function(l){
   private$open <- append(private$open, l)
   private$inner <- list()
 })
+
 VL$set("private", "add", function(l){
   #has a composition?
   if (length(names(private$open))){
@@ -53,15 +58,11 @@ VL$set("private", "add", function(l){
     }
   }
 
-  if (names(l) %in% vl_prop$encoding){
-    if (length(private$inner$encoding)){
-      private$inner$encoding <- append(private$inner$encoding, l)
-    } else{
-      private$inner$encoding <- l
-    }
-  } else {
+  if (names(l) %in% vl_prop$encoding)
+    private$inner$encoding <- append(private$inner$encoding, l)
+  else
     private$inner <- append(private$inner, l)
-  }
+
 })
 
 VL$set("public", "exit_layer", function(){
@@ -143,8 +144,8 @@ for (i in vl_prop$encoding){
 
 #view_spec
 for (i in vl_prop$view_spec){
-  VL$set("public", i, function(...){
-    l <- list(list(...))
+  VL$set("public", i, function(x){
+    l <- list(x)
     names(l) <- this_call()
     private$add(l)
     invisible(self)
