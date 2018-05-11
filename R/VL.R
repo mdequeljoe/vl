@@ -121,11 +121,12 @@ VL$set("public", "transform", function(...){
 })
 
 #data
-VL$set("public", "data", function(data){
+VL$set("public", "data", function(data, format = NULL){
   if (is.character(data))
-    l <- list(data = list(url = data))
+    l <- list(data = list(url = data, format = format))
   else
-    l <- list(data = list(values = data))
+    l <- list(data = list(values = data, format = format))
+  l$data <- l$data[!sapply(l$data, is.null)]
   private$add(l)
   invisible(self)
 })
