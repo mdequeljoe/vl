@@ -1,56 +1,13 @@
-#' <Add Title>
-#'
-#' <Add Description>
-#'
 #' @import htmlwidgets
 #'
-#' @export
 plot_vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, width = NULL) {
 
-  if (is.character(spec)){
-
-    if (file.exists(spec))
-      spec <- paste(readLines(spec), collapse = "\n")
-
-    else if (!jsonlite::validate(spec)){
-      #check if data value refers to R object
-      if (grepl("data.*:.*values.*:[\n| ]*", spec)){
-        data <- trimws(gsub(".*values.*:[\n| ]*(.*?)[\n| ]*}.*", "\\1", spec))
-        spec <- gsub(data, "[]", spec)
-      } else if (grepl("data.*:.*[\n| ]*", spec)){
-        data <- trimws(gsub(".*data.*:[\n| ]*(.*?)[\n| ]*,.*", "\\1", spec))
-        spec <- gsub(data, "[]", spec)
-      }
-
-      cx <- V8::v8()
-      spec <- cx$get(sprintf('JSON.stringify(%s)', spec))
-    }
-
-    spec <- jsonlite::fromJSON(spec, simplifyVector = F)
-
-    # retrieve data if R object
-    if (!length(spec$data$values) && !length(spec$data$url))
-      spec$data$values <- eval(parse(text = data))
-  }
-
-  if (!length(spec$`$schema`))
-    spec$`$schema` <- "https://vega.github.io/schema/vega-lite/v2.json"
-
-  if (is.data.frame(spec$data))
-    spec$data <- list(values = spec$data)
-
-  spec <- nm_fields(spec)
-  spec <- set_types(spec)
-
-  # what about url json ?
-  if (is.data.frame(spec$data$values))
-    if (any(grepl("\\.", colnames(spec$data$values))))
-      spec <- rm_dots(spec, colnames(spec$data$values))
+  spec <- check_vl_spec(spec)
 
   if (is.null(embed_opt))
     embed_opt <- list(actions = FALSE)
 
-  if (!length(embed_opt$actions))
+  if (is.null(embed_opt$actions))
     embed_opt$actions <- FALSE
 
   params = list(
@@ -66,6 +23,40 @@ plot_vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, wid
     package = 'vl',
     elementId = elementId
   )
+}
+
+check_vl_spec <- function(spec){
+
+  if (is.null(spec$`$schema`))
+    spec$`$schema` <- "https://vega.github.io/schema/vega-lite/v2.json"
+
+  #name fields and list types
+  spec <- nm_fields(spec)
+  spec <- set_types(spec)
+
+  #check for dots .
+  if (is.data.frame(spec$data$values))
+    if (any(grepl("\\.", colnames(spec$data$values))))
+      spec <- rm_dots(spec, colnames(spec$data$values))
+
+  spec
+}
+
+spec_data <- function(l){
+
+  el <- l[[1]][[1]]
+  if (is.character(el) && has_url_prefix(el))
+    names(l[[1]]) <- "url"
+  else
+    names(l[[1]]) <- "values"
+  #is a local file
+  if (is.character(l$data$values)){
+    l$data$values <- ext_as_df(l$data$values)
+  }
+  # is a vega dataset?
+  if (!is.null(l$data$url) && grepl("^!", l$data$url))
+    l$data$url <- gsub("!", "https://vega.github.io/vega-datasets/data/", l$data$url)
+  l
 }
 
 #' Shiny bindings for vl
