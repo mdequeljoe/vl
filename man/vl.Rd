@@ -2,11 +2,22 @@
 % Please edit documentation in R/vl.R
 \name{vl}
 \alias{vl}
-\title{<Add Title>}
+\title{vl, a Vega-Lite environment}
 \usage{
-vl(spec, embed_opt = NULL, elementId = NULL, height = NULL,
-  width = NULL)
+vl()
 }
 \description{
-<Add Description>
+Provides an interface to building Vega-Lite JSON specifications
 }
+\section{Usage}{
+
+\preformatted{
+v <- vl()
+v$data(mtcars)$
+point()$
+  x("mpg:Q")$
+  y("hp")$
+plot()
+}
+}
+
