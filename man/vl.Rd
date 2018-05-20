@@ -14,10 +14,9 @@ Provides an interface to building Vega-Lite JSON specifications
 \preformatted{
 v <- vl()
 v$data(mtcars)$
-point()$
-  x("mpg:Q")$
-  y("hp")$
-plot()
+  point()$
+    x("mpg:Q")$
+    y("hp")$plot()
 }
 }
 

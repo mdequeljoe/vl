@@ -149,4 +149,3 @@ test_that("nested repeat specs are valid", {
   expect_equal(length(l$vconcat[[2]]), 2)
 }
 )
-

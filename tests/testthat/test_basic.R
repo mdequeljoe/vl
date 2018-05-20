@@ -30,6 +30,7 @@ test_that("basic spec checks work", {
   expect_equal(l$data$url, "https://vega.github.io/vega-datasets/data/cars.json")
   expect_equal(names(l$encoding$x), "field")
   expect_equal(names(l$encoding$color), c("field", "type"))
+  expect_equal(l$encoding$color$type, "nominal")
 })
 
 test_that("title anchor spec valid", {

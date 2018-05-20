@@ -8,8 +8,9 @@ ext_as_df <- function(f) {
   )
 }
 
-has_url_prefix <- function(f) if (grepl("^http[s]?://|^!", f)) TRUE else FALSE
+has_url_prefix <- function(f) grepl("^http[s]?://|^!", f)
 
+# dont need this in this form anymore
 rm_dots <- function(l, n){
   lapply(l, function(m){
     if (is.list(m) && !is.data.frame(m)) {
@@ -21,46 +22,6 @@ rm_dots <- function(l, n){
         m <- gsub("\\.", " ", m)
       m
     }
-  })
-}
-
-nm_fields <- function(l){
-
-  if (any(names(l) == "encoding")){
-    l$encoding <- lapply(l$encoding, function(d){
-      if (is.list(d)){
-        names(d)[is.null(names(d))] <- "field"
-        names(d)[names(d) == ""] <- "field"
-      } else {
-        d <- list(field = d)
-      }
-      d
-    })
-  }
-  lapply(l, function(d){
-    if (is.list(d) && !is.data.frame(d))
-      nm_fields(d)
-    else
-      d
-  })
-}
-
-set_types <- function(l){
-  if (any(names(l) == "encoding")){
-    l$encoding <- lapply(l$encoding, function(d){
-      if (length(d$field) && grepl(":(.)$", d$field)){
-        type <- gsub(".*:(.)$", "\\1", d$field)
-        d$type <- get_type(type)
-        d$field <- gsub(paste0(":", type), "", d$field)
-      }
-      d
-    })
-  }
-  lapply(l, function(d){
-    if (is.list(d) && !is.data.frame(d))
-      set_types(d)
-    else
-      d
   })
 }
 

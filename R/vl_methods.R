@@ -105,10 +105,17 @@ for (i in vl_prop$mark){
   })
 }
 
-#encoding
 for (i in vl_prop$encoding){
   VL$set("public", i, function(...){
-    l <- list(list(...))
+    l <- list(...)
+    if (is.null(names(l)[1]) || !nchar(names(l)[1]))
+      names(l)[1] <- "field"
+    if (!is.null(l$field) && grepl(":(.)$", l$field)){
+      type <- gsub(".*:(.)$", "\\1", l$field)
+      l$type <- get_type(type)
+      l$field <- gsub(paste0(":", type), "", l$field)
+    }
+    l <- list(l)
     names(l) <- this_call()
     if (names(l) == "label") names(l) <- "text"
     if (!is.null(l[[1]]$type))
@@ -117,6 +124,24 @@ for (i in vl_prop$encoding){
     invisible(self)
   })
 }
+
+#encoding
+# for (i in vl_prop$encoding){
+#   VL$set("public", i, function(...){
+#     l <- list(list(...))
+#     #name fields
+#     field <- names(l[[1]])[1]
+#     if (!nchar(field) || is.null(field))
+#       names(l[[1]])[1] <- "field"
+#
+#     names(l) <- this_call()
+#     if (names(l) == "label") names(l) <- "text"
+#     if (!is.null(l[[1]]$type))
+#       l[[1]]$type <- get_type(l[[1]]$type)
+#     private$inner$encoding <- append(private$inner$encoding, l)
+#     invisible(self)
+#   })
+# }
 
 #view specs
 for (i in vl_prop$view_spec){

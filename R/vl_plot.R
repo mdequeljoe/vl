@@ -30,10 +30,6 @@ check_vl_spec <- function(spec){
   if (is.null(spec$`$schema`))
     spec$`$schema` <- "https://vega.github.io/schema/vega-lite/v2.json"
 
-  #name fields and list types
-  spec <- nm_fields(spec)
-  spec <- set_types(spec)
-
   #check for dots .
   if (is.data.frame(spec$data$values))
     if (any(grepl("\\.", colnames(spec$data$values))))
