@@ -82,9 +82,9 @@ VL$set("public", "print", function(){
   invisible(self)
 })
 
-VL$set("public", "plot", function(...){
+VL$set("public", "plot", function(){
   private$update_spec()
-  plot_vl(private$spc, private$embed_opt, ...)
+  plot_vl(private$spc, private$embed_opt)
 })
 
 #data

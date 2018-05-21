@@ -1,5 +1,5 @@
 # vl 
-vl provides a lightweight R6 interface for writing vega-lite specifications. Inspired mainly by [to-vega](https://github.com/gjmcn/to-vega), vl can be thought of as a way to write the JSON equivalent specification in short-form notation.
+vl provides a lightweight R6 interface for writing vega-lite specifications. Inspired mainly by [to-vega](https://github.com/gjmcn/to-vega), vl can be thought of as a way to write the JSON equivalent spec in short-form notation.
 
 ```r
 vl::vl()$
@@ -16,15 +16,27 @@ vl tries to find the middle ground between writing specs via an interface (inste
 
 ## Install
 
-vl is a work in progress
+vl is a work in progress. Install via 
+
+```r
+devtools::install_github("mdequeljoe/vl")
+```
 
 ## Usage
+vl uses:
 
-Using vl works in a similar way as [to-vega](https://github.com/gjmcn/to-vega).
-Initiate a new vl environment with `vl`. Data can be attached to the current view via `data` as a dataframe, local file, or url. To refer to a vega dataset url, prefix the name with `!`. 
+[vega-lite](https://github.com/vega/vega-lite) v.2.4.3  
+[vega-embed](https://github.com/vega/vega-embed) v.3.9.0
 
-A vl specification can be parsed with `plot`. The vl print method plots the current vl specification. `as_spec` returns the current specification as a list or JSON. 
+A new vl environment can be initiated with `vl`. 
 
+```r
+v <- vl::vl()
+```
+
+Data can be attached to the current view via `data` as a dataframe, local file, or url. To refer to a vega dataset url, prefix the file name with `!`. 
+
+A vl specification can be parsed with `plot`. The vl print method also plots the current vl specification. `as_spec` returns the current specification as a list or JSON. vl can be used in shiny with `renderVl` and `vlOutput`.
 
 ### View specifications 
 
@@ -47,16 +59,31 @@ These methods accept any optionally specified properties relevant to that mark. 
 
 Specify an encoding channel as one of  `x`, `y`, `x2`, `y2`, `color`, `opacity`, `size`, `shape`, `label`, `tooltip`, `href`, `order`, `detail`, `row`, `column`.
 
-When an encoding is specified, it applies to the last mark that was specified. The encoding type can be specified [altair](https://altair-viz.github.io/user_guide/encoding.html) style, `x(field = "var:Q")`, short-form style,
+When an encoding is specified, it applies to the preceding mark of the current view. The encoding type can be specified [altair](https://altair-viz.github.io/user_guide/encoding.html) style, `x(field = "var:Q")`, short-form style,
 `x(field = "var", type = "Q")` or in full form notation `x(field = "var", type = "quantitative")` for those who like extra typing.
 
 Note that `label` refers to the [text](https://vega.github.io/vega-lite/docs/text.html) encoding to avoid a clash with the `text` mark. 
+
+To include multiple fields in a tooltip, list them individually:
+
+```r
+vl::vl()$
+  data("!cars.json")$
+  point()$
+  x("Horsepower:Q")$
+  y("Miles_per_Gallon:Q")$
+  tooltip(
+    list(field = "Horsepower:Q"),
+    list(field = "Miles_per_Gallon:Q")
+  )$
+  plot()
+```
 
 ### View compositions
 
 View compositions can be set with `layer`, `hconcat`, `vconcat`, `spec`.
 
-When a view composition is specified, any succeeding vl method will be applied to this compostion. These methods take no arguments. To exit the current view composition use `exit_view`. Note that it is not necessary to call `exit_view` if only two views are present and the succeeding method is `plot` or `as_spec`. 
+These methods take no arguments. When a view composition is specified, any succeeding vl method will be applied to this compostion. To exit the current view composition use `exit_view`. Note that it is not necessary to call `exit_view` if only two views are present and the succeeding method is `plot` or `as_spec`. 
 
 To add a composition to an existing composition use `add_view`. 
 
@@ -84,9 +111,15 @@ v$data("!cars.json")$
 ```
 ![](man/img/Cars_dash.png)
 
+### Embed
+
+Pass any [embed](https://github.com/vega/vega-embed) options with `embed`. Note that by default actions are turned off.
+
 ## Related
 
 Beyond the projects already previously mentioned, here are some related works
+
+[altair](https://github.com/vegawidget/altair) R interface
 
 [vegaliteR](https://github.com/timelyportfolio/vegaliteR)
 

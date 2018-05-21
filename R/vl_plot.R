@@ -1,6 +1,6 @@
 #' @import htmlwidgets
 #'
-plot_vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, width = NULL) {
+plot_vl <- function(spec, embed_opt = NULL) {
 
   spec <- check_vl_spec(spec)
 
@@ -18,10 +18,7 @@ plot_vl <- function(spec, embed_opt = NULL, elementId = NULL, height = NULL, wid
   htmlwidgets::createWidget(
     name = 'vl',
     params,
-    width = width,
-    height = height,
-    package = 'vl',
-    elementId = elementId
+    package = 'vl'
   )
 }
 
