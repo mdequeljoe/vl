@@ -4,7 +4,7 @@ vl_prop = list(
                  facet','resolve', 'transform'),
   compose = c('layer', 'hconcat', 'vconcat'),
   mark = c('area', 'bar', 'circle', 'line', 'point', 'rect', 'rule', 'square',
-           'text', 'tick', 'geoshape'),
+           'text', 'tick', 'geoshape', 'trail'),
   encoding = c('x', 'y', 'x2', 'y2', 'color', 'opacity', 'size', 'shape',
                'label', 'tooltip', 'href', 'order', 'detail', 'row', 'column')
 )

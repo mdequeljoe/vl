@@ -50,7 +50,7 @@ Note that `repeat_row`, `repeat_column`, `repeat_row_column` refer to [repeat](h
 
 ### Mark
 
-Specify a mark as one of `area`, `bar`, `circle`, `line`, `point`, `rect`, `rule`, `square`, `text`, `tick`, `geoshape`
+Specify a mark as one of `area`, `bar`, `circle`, `line`, `point`, `rect`, `rule`, `square`, `text`, `tick`, `geoshape`, `trail`
 
 These methods accept any optionally specified properties relevant to that mark. For instance, `text(align = 'left', dx = 100, dy = -5)` See the official [docs](https://vega.github.io/vega-lite/docs/mark.html) for details on mark-specific properties.
 
@@ -60,7 +60,7 @@ These methods accept any optionally specified properties relevant to that mark. 
 Specify an encoding channel as one of  `x`, `y`, `x2`, `y2`, `color`, `opacity`, `size`, `shape`, `label`, `tooltip`, `href`, `order`, `detail`, `row`, `column`.
 
 When an encoding is specified, it applies to the preceding mark of the current view. The encoding type can be specified [altair](https://altair-viz.github.io/user_guide/encoding.html) style, `x(field = "var:Q")`, short-form style,
-`x(field = "var", type = "Q")` or in full form notation `x(field = "var", type = "quantitative")` for those who like extra typing.
+`x(field = "var", type = "Q")` or in full form notation `x(field = "var", type = "quantitative")` for those who like extra typing. If the first argument is unnamed it is set as the field property.
 
 Note that `label` refers to the [text](https://vega.github.io/vega-lite/docs/text.html) encoding to avoid a clash with the `text` mark. 
 
@@ -73,8 +73,8 @@ vl::vl()$
   x("Horsepower:Q")$
   y("Miles_per_Gallon:Q")$
   tooltip(
-    list(field = "Horsepower:Q"),
-    list(field = "Miles_per_Gallon:Q")
+    list("Horsepower:Q"),
+    list("Miles_per_Gallon:Q")
   )$
   plot()
 ```
