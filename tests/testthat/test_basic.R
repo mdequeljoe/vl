@@ -22,6 +22,10 @@ l <- v$data("!cars.json")$
   x("Horsepower")$
   y("Miles_per_Gallon")$
   color("Cylinders:N")$
+  tooltip(
+    list(field = "Horsepower", type = "Q"),
+    list(field = "Cylinders", type = "O")
+  )$
   title(text = "Cars", anchor = "start")$
   as_spec()
 
@@ -30,6 +34,7 @@ test_that("basic spec checks work", {
   expect_equal(l$data$url, "https://vega.github.io/vega-datasets/data/cars.json")
   expect_equal(names(l$encoding$x), "field")
   expect_equal(names(l$encoding$color), c("field", "type"))
+  expect_equal(length(l$encoding$tooltip), 2)
   expect_equal(l$encoding$color$type, "nominal")
 })
 

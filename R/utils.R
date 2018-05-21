@@ -10,7 +10,6 @@ ext_as_df <- function(f) {
 
 has_url_prefix <- function(f) grepl("^http[s]?://|^!", f)
 
-# dont need this in this form anymore
 rm_dots <- function(l, n){
   lapply(l, function(m){
     if (is.list(m) && !is.data.frame(m)) {
@@ -34,6 +33,31 @@ get_type <- function(type){
          "G" = "geojson",
          type
   )
+}
+
+name_encodings <- function(...){
+  l <- list(...)
+  if (any(!sapply(l, is.list)))
+    l <- list(l)
+  #tooltips can take separate lists
+  l <- lapply(l, function(d){
+    if (is.null(names(d)[1]) || !nchar(names(d)[1]))
+      names(d)[1] <- "field"
+
+    if (!is.null(d$type))
+      d$type <- get_type(d$type)
+
+    if (!is.null(d$field) && grepl(":(.)$", d$field)){
+      type <- gsub(".*:(.)$", "\\1", d$field)
+      d$type <- get_type(type)
+      d$field <- gsub(paste0(":", type), "", d$field)
+    }
+
+    d
+  })
+  if (length(l) > 1)
+    l <- list(l)
+  l
 }
 
 #layer and spec -> append to existing list

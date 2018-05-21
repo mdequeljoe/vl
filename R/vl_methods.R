@@ -1,4 +1,4 @@
-
+VL$set("private", "embed_opt", list())
 VL$set("private", "spc", list())
 VL$set("private", "open", list())
 VL$set("private", "inner", character(0))
@@ -31,6 +31,11 @@ VL$set("private", "check_inner", function(){
     private$open <- update_spec(private$open, private$inner)
     private$inner <- character(0)
   }
+})
+
+VL$set("public", "embed", function(...){
+  private$embed_opt <- list(...)
+  invisible(self)
 })
 
 VL$set("public", "add_view", function(){
@@ -66,7 +71,7 @@ VL$set("public", "as_spec", function(type = c("list", "JSON")){
   type <- match.arg(type)
   private$update_spec()
   if (type == "JSON")
-    jsonlite::toJSON(check_vl_spec(private$spc), auto_unbox = TRUE)
+    jsonlite::toJSON(check_vl_spec(private$spc), auto_unbox = TRUE, pretty = TRUE)
   else
     check_vl_spec(private$spc)
 })
@@ -77,9 +82,9 @@ VL$set("public", "print", function(){
   invisible(self)
 })
 
-VL$set("public", "plot", function(){
+VL$set("public", "plot", function(...){
   private$update_spec()
-  plot_vl(private$spc)
+  plot_vl(private$spc, private$embed_opt, ...)
 })
 
 #data
@@ -107,41 +112,14 @@ for (i in vl_prop$mark){
 
 for (i in vl_prop$encoding){
   VL$set("public", i, function(...){
-    l <- list(...)
-    if (is.null(names(l)[1]) || !nchar(names(l)[1]))
-      names(l)[1] <- "field"
-    if (!is.null(l$field) && grepl(":(.)$", l$field)){
-      type <- gsub(".*:(.)$", "\\1", l$field)
-      l$type <- get_type(type)
-      l$field <- gsub(paste0(":", type), "", l$field)
-    }
-    l <- list(l)
+    l <- name_encodings(...)
     names(l) <- this_call()
-    if (names(l) == "label") names(l) <- "text"
-    if (!is.null(l[[1]]$type))
-      l[[1]]$type <- get_type(l[[1]]$type)
+    if (names(l) == "label")
+      names(l) <- "text"
     private$inner$encoding <- append(private$inner$encoding, l)
     invisible(self)
   })
 }
-
-#encoding
-# for (i in vl_prop$encoding){
-#   VL$set("public", i, function(...){
-#     l <- list(list(...))
-#     #name fields
-#     field <- names(l[[1]])[1]
-#     if (!nchar(field) || is.null(field))
-#       names(l[[1]])[1] <- "field"
-#
-#     names(l) <- this_call()
-#     if (names(l) == "label") names(l) <- "text"
-#     if (!is.null(l[[1]]$type))
-#       l[[1]]$type <- get_type(l[[1]]$type)
-#     private$inner$encoding <- append(private$inner$encoding, l)
-#     invisible(self)
-#   })
-# }
 
 #view specs
 for (i in vl_prop$view_spec){
