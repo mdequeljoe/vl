@@ -3,20 +3,34 @@
 \name{vl}
 \alias{vl}
 \title{vl, a Vega-Lite environment}
-\usage{
-vl()
-}
 \description{
-Provides an interface to building Vega-Lite JSON specifications
+Provides an interface to building Vega-Lite JSON specifications that stays close
+to the underlying JSON syntax. In this way, vl can be used to write specifications
+in a short-form notation.
 }
 \section{Usage}{
 
-\preformatted{
+\preformatted{v <- vl()}
+}
+
+\section{Methods}{
+
+Data can be attached to the current view via \code{data} as a dataframe,
+local file, or url. To refer to a vega dataset url,
+prefix the file name with \code{!} (e.g. $data("!cars.json")).
+\subsection{view specification}{
+ hi \code{rar()}
+}
+}
+
+\examples{
+\dontrun{
 v <- vl()
 v$data(mtcars)$
   point()$
     x("mpg:Q")$
-    y("hp")$plot()
-}
+    y("hp")$
+  plot()
 }
 
+}

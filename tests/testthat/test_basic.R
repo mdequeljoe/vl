@@ -26,7 +26,7 @@ l <- v$data("!cars.json")$
     list(field = "Horsepower", type = "Q"),
     list(field = "Cylinders", type = "O")
   )$
-  title(text = "Cars", anchor = "start")$
+  title(text = "Cars")$
   as_spec()
 
 test_that("basic spec checks work", {
@@ -36,11 +36,12 @@ test_that("basic spec checks work", {
   expect_equal(names(l$encoding$color), c("field", "type"))
   expect_equal(length(l$encoding$tooltip), 2)
   expect_equal(l$encoding$color$type, "nominal")
+  expect_equal(l$title$text, "Cars")
 })
 
 test_that("title anchor spec valid", {
-  expect_equal(length(l$title), 2)
-  expect_equal(names(l$title), c("text", "anchor"))
+  expect_equal(length(l$title), 1)
+  expect_equal(names(l$title), "text")
 })
 
 v <- vl::vl()

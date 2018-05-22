@@ -88,8 +88,8 @@ VL$set("public", "plot", function(){
 
 #data
 VL$set("public", "data", function(data, ...){
-  l <- list(data = list(data, ...))
-  l <- spec_data(l)
+  l <- list(data = list(...))
+  l$data <- append(l$data, spec_data(data))
   private$add_prop(l)
   invisible(self)
 })
@@ -135,7 +135,7 @@ for (i in vl_prop$view_spec){
           if (!nchar(names(l[k]))) l[[k]] else l[k]
         )
     }
-    if (any(sapply(l, is.list)) || length(l) > 1)
+    if (any(sapply(l, is.list)) || length(names(l)))
       l <- list(l)
     names(l) <- this_call()
     private$add_prop(l)

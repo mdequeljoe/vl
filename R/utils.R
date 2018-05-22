@@ -64,23 +64,39 @@ name_encodings <- function(...){
   l
 }
 
-spec_data <- function(l){
+# spec_data <- function(l){
+#
+#   el <- l[[1]][[1]]
+#   if (is.character(el) && has_url_prefix(el))
+#     names(l[[1]]) <- "url"
+#   else
+#     names(l[[1]]) <- "values"
+#   #is a local file
+#   if (is.character(l$data$values)){
+#     l$data$values <- ext_as_df(l$data$values)
+#   }
+#   # is a vega dataset?
+#   if (!is.null(l$data$url) && grepl("^!", l$data$url))
+#     l$data$url <- gsub("!", "https://vega.github.io/vega-datasets/data/", l$data$url)
+#   l
+# }
 
-  el <- l[[1]][[1]]
-  if (is.character(el) && has_url_prefix(el))
-    names(l[[1]]) <- "url"
+spec_data <- function(l){
+  if (is.character(l) && has_url_prefix(l))
+    nm <- "url"
   else
-    names(l[[1]]) <- "values"
+    nm <- "values"
+  l <- list(l)
+  names(l) <- nm
   #is a local file
-  if (is.character(l$data$values)){
-    l$data$values <- ext_as_df(l$data$values)
+  if (is.character(l$values)){
+    l$values <- ext_as_df(l$values)
   }
   # is a vega dataset?
-  if (!is.null(l$data$url) && grepl("^!", l$data$url))
-    l$data$url <- gsub("!", "https://vega.github.io/vega-datasets/data/", l$data$url)
+  if (!is.null(l$url) && grepl("^!", l$url))
+    l$url <- sub("!", "https://vega.github.io/vega-datasets/data/", l$url)
   l
 }
-
 
 #layer and spec -> append to existing list
 #others -> append as separate list; n + 1

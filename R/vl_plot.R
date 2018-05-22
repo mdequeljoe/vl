@@ -25,7 +25,7 @@ plot_vl <- function(spec, embed_opt = NULL) {
 check_vl_spec <- function(spec){
 
   if (is.null(spec$`$schema`))
-    spec$`$schema` <- "https://vega.github.io/schema/vega-lite/v2.json"
+    spec$`$schema` <- "https://vega.github.io/schema/vega-lite/v2.1.json"
 
   #check for dots .
   if (is.data.frame(spec$data$values))
