@@ -35,23 +35,6 @@ check_vl_spec <- function(spec){
   spec
 }
 
-spec_data <- function(l){
-
-  el <- l[[1]][[1]]
-  if (is.character(el) && has_url_prefix(el))
-    names(l[[1]]) <- "url"
-  else
-    names(l[[1]]) <- "values"
-  #is a local file
-  if (is.character(l$data$values)){
-    l$data$values <- ext_as_df(l$data$values)
-  }
-  # is a vega dataset?
-  if (!is.null(l$data$url) && grepl("^!", l$data$url))
-    l$data$url <- gsub("!", "https://vega.github.io/vega-datasets/data/", l$data$url)
-  l
-}
-
 #' Shiny bindings for vl
 #'
 #' Output and render functions for using vl within Shiny
@@ -61,7 +44,7 @@ spec_data <- function(l){
 #' @param width,height Must be a valid CSS unit (like \code{'100\%'},
 #'   \code{'400px'}, \code{'auto'}) or a number, which will be coerced to a
 #'   string and have \code{'px'} appended.
-#' @param expr An expression that generates a vl
+#' @param expr An expression that generates a vl environment
 #' @param env The environment in which to evaluate \code{expr}.
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
 #'   is useful if you want to save an expression in a variable.

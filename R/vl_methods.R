@@ -56,7 +56,6 @@ VL$set("public", "exit_view", function(){
 })
 
 VL$set("private", "update_spec", function(){
-
   if (length(private$open)){
     self$exit_view()
     private$spc <- append(private$spc, private$open)
@@ -98,12 +97,15 @@ VL$set("public", "data", function(data, ...){
 #marks
 for (i in vl_prop$mark){
   VL$set("public", i, function(...){
+    call <- this_call()
+    if (call == "box_plot")
+      call <- "box-plot"
     if (length(list(...))){
       l <- list(...)
-      l$type <- this_call()
+      l$type <- call
       l <- list(mark = l)
     } else {
-      l <- list(mark = this_call())
+      l <- list(mark = call)
     }
     private$add_prop(l)
     invisible(self)

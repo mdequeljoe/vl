@@ -1,3 +1,8 @@
+this_call <- function() {
+  call <- deparse(sys.call(which = -1L)[[1]])
+  gsub(".+\\$(.+)", "\\1", call[length(call)])
+}
+
 ext_as_df <- function(f) {
   f_ext <- gsub(".+\\.(.+)", "\\1", f)
   switch(
@@ -52,13 +57,30 @@ name_encodings <- function(...){
       d$type <- get_type(type)
       d$field <- gsub(paste0(":", type), "", d$field)
     }
-
     d
   })
   if (length(l) > 1)
     l <- list(l)
   l
 }
+
+spec_data <- function(l){
+
+  el <- l[[1]][[1]]
+  if (is.character(el) && has_url_prefix(el))
+    names(l[[1]]) <- "url"
+  else
+    names(l[[1]]) <- "values"
+  #is a local file
+  if (is.character(l$data$values)){
+    l$data$values <- ext_as_df(l$data$values)
+  }
+  # is a vega dataset?
+  if (!is.null(l$data$url) && grepl("^!", l$data$url))
+    l$data$url <- gsub("!", "https://vega.github.io/vega-datasets/data/", l$data$url)
+  l
+}
+
 
 #layer and spec -> append to existing list
 #others -> append as separate list; n + 1

@@ -4,16 +4,10 @@ vl_prop = list(
                  facet','resolve', 'transform'),
   compose = c('layer', 'hconcat', 'vconcat'),
   mark = c('area', 'bar', 'circle', 'line', 'point', 'rect', 'rule', 'square',
-           'text', 'tick', 'geoshape', 'trail'),
+           'text', 'tick', 'geoshape', 'trail', 'box_plot'),
   encoding = c('x', 'y', 'x2', 'y2', 'color', 'opacity', 'size', 'shape',
                'label', 'tooltip', 'href', 'order', 'detail', 'row', 'column')
 )
-
-this_call <- function() {
-  call <- gsub("\\(\\)", "", as.character(sys.call(which = -1L)))
-  gsub(".+\\$(.+)", "\\1", call[1])
-}
-
 
 #' vl, a Vega-Lite environment
 #'
