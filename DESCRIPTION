@@ -1,16 +1,26 @@
 Package: vl
-Title: R6 interface for writing short-form Vega-Lite JSON specifications
-Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-Depends: R (>= 3.4.2)
+Title: R6 interface for writing and parsing Vega-Lite specifications
+Version: 0.0.1
+Authors@R: c(
+      person("Matthew", "de Queljoe", email = "matthew.dequeljoe@gmail.com", role = c("aut", "cre")),
+      person("Jeffrey", "Heer", comment = "Vega-Lite library", role = c("aut")),
+      person("Dominik", "Moritz", comment = "Vega-Lite library", role = c("aut")),
+      person("Arvind", "Satyanarayan", comment = "Vega-Lite library", role = c("aut")),
+      person("Kanit", "Wongsuphasawat,", comment = "Vega-Lite library", role = c("aut")),
+      person("Mike", "Bostock", comment = "D3 library", role = c("aut")),
+      person("Alicia", "Schep", comment = "Vega-embed modification for inline rendering in RStudio", role = c("ctb"))
+      )
+Description: An R6 interface for writing, validating, and parsing Vega-Lite JSON specifications. It provides
+    the advantage of building specs in a concise notation without abstracting too far away
+    from the underlying Vega-Lite JSON syntax. Parsing a specification generates the corresponding visualisation
+    as an htmlwidget.
 Imports:
-  htmlwidgets, jsonlite, R6
+  htmlwidgets, jsonlite, R6, V8
 Suggests:
   knitr,
   rmarkdown,
     testthat
-License: What license is it under?
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
