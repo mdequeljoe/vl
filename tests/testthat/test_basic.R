@@ -5,43 +5,37 @@ l <- v$data(iris)$
   point()$
   x("Sepal.Width", type = "Q")$
   y("Sepal.Length", type = "Q")$
-  color("Species", type = "N")$
+  color("Species:N")$
   title("Iris")$
   as_spec()
 
 test_that("basic plot spec valid", {
   expect_equal(names(l), c("data", "mark", "encoding", "title", "$schema"))
   expect_equal(names(l$encoding), c("x", "y", "color"))
+  expect_equal(l$encoding$y$field, "Sepal Length")
   expect_equal(l$encoding$color$type, "nominal")
+  expect_equal(names(l$encoding$color), c("field", "type"))
   expect_equal(l$title, "Iris")
 })
 
 v <- vl::vl()
 l <- v$data("!cars.json")$
   point()$
-  x("Horsepower")$
-  y("Miles_per_Gallon")$
+  x("Horsepower:Q")$
+  y("Miles_per_Gallon:Q")$
   color("Cylinders:N")$
-  tooltip(
-    list(field = "Horsepower", type = "Q"),
-    list(field = "Cylinders", type = "O")
-  )$
-  title(text = "Cars")$
+  title(text = "Cars", anchor = "start")$
   as_spec()
 
-test_that("basic spec checks work", {
+test_that("vega urls are valid", {
   expect_equal(names(l$data), "url")
   expect_equal(l$data$url, "https://vega.github.io/vega-datasets/data/cars.json")
-  expect_equal(names(l$encoding$x), "field")
-  expect_equal(names(l$encoding$color), c("field", "type"))
-  expect_equal(length(l$encoding$tooltip), 2)
-  expect_equal(l$encoding$color$type, "nominal")
-  expect_equal(l$title$text, "Cars")
 })
 
-test_that("title anchor spec valid", {
-  expect_equal(length(l$title), 1)
-  expect_equal(names(l$title), "text")
+test_that("arguments passed to view spec properties are valid", {
+  expect_equal(l$title$text, "Cars")
+  expect_equal(length(l$title), 2)
+  expect_equal(names(l$title), c("text", "anchor"))
 })
 
 v <- vl::vl()

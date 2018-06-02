@@ -4,22 +4,60 @@
 \alias{vl}
 \title{vl, a Vega-Lite environment}
 \description{
-Provides an interface to building Vega-Lite JSON specifications that stays close
-to the underlying JSON syntax. In this way, vl can be used to write specifications
-in a short-form notation.
+Provides an interface to building Vega-Lite JSON specifications that stays
+close to the underlying JSON syntax. In this way, vl can be used to write
+specifications in a short-form notation.
 }
 \section{Usage}{
-
-\preformatted{v <- vl()}
+ \preformatted{v <- vl()}
 }
 
 \section{Methods}{
 
-Data can be attached to the current view via \code{data} as a dataframe,
-local file, or url. To refer to a vega dataset url,
-prefix the file name with \code{!} (e.g. $data("!cars.json")).
-\subsection{view specification}{
- hi \code{rar()}
+\subsection{view specification}{ View specifications
+  can be set with one or more of the following:
+
+  \code{description, title, width,
+  height, name, background, padding, autosize, config, selection, facet,
+  repeat_row, repeat_column, repeat_row_column, transform}
+
+  Data can be attached to the current view via \code{data} as a dataframe,
+  local file, or url. To refer to a vega dataset url, prefix the file name with a \code{!}.
+
+  These methods accept relevant their properties/parameters as arguments
+  and are applied to the current view. For properties that accept either a string type
+  or parameter objects, passing an unnamed vector will be taken as the string type.
+  For instance \code{title("a chart title")} and \code{title(text = "a chart title", anchor = "start")} are valid.
+  Note that \code{repeat_row}, \code{repeat_column}, \code{repeat_row_column} refer to
+  \href{repeat}{https://vega.github.io/vega-lite/docs/repeat.html} in order to avoid
+  clashing with \code{base::repeat}
+}
+\subsection{marks}{
+Specify a mark as one of
+
+\code{area, bar, circle, line, point, rect, rule,
+ square, text, tick, geoshape, trail}
+
+These methods accept any optionally specified properties relevant to that mark.
+For instance, \code{text(align = 'left', dx = 100, dy = -5)}
+}
+\subsection{encoding}{
+Specify an encoding channel as one of \code{x, y, x2, y2, color, opacity, size, shape,
+ label, tooltip, href, order, detail, row, column}.
+When an encoding is specified, it applies to the preceding mark of the current view.
+ The encoding type can be specified altair style, x(field = "var:Q"),
+ short-form style, x(field = "var", type = "Q") or in full form notation x(field = "var", type = "quantitative").
+ If the first argument is unnamed it is set as the field property.
+Note that label refers to the text encoding to avoid a clash with the text mark.
+To include multiple fields in a tooltip, list them individually:
+}
+\subsection{view composition}{
+View compositions can be set with \code{layer, hconcat, vconcat, spec}.
+These methods take no arguments. When a view composition is specified, any succeeding vl method
+will be applied to this compostion. To exit the current view composition use exit_view.
+ Note that it is not necessary to call exit_view if only two views are present and the
+  succeeding method is plot or as_spec.
+To add a composition to an existing composition use add_view.
 }
 }
 
@@ -29,7 +67,7 @@ v <- vl()
 v$data(mtcars)$
   point()$
     x("mpg:Q")$
-    y("hp")$
+    y("hp:Q")$
   plot()
 }
 

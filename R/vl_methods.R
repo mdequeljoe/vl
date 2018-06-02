@@ -76,13 +76,13 @@ VL$set("public", "as_spec", function(type = c("list", "JSON")){
 })
 
 VL$set("public", "print", function(){
-  private$update_spec()
-  print(plot_vl(private$spc))
+  print(self$plot())
   invisible(self)
 })
 
 VL$set("public", "plot", function(){
   private$update_spec()
+  private$validate()
   plot_vl(private$spc, private$embed_opt)
 })
 
@@ -114,7 +114,8 @@ for (i in vl_prop$mark){
 
 for (i in vl_prop$encoding){
   VL$set("public", i, function(...){
-    l <- name_encodings(...)
+    l <- check_encoding(list(...))
+    l <- list(l)
     names(l) <- this_call()
     if (names(l) == "label")
       names(l) <- "text"
@@ -122,6 +123,28 @@ for (i in vl_prop$encoding){
     invisible(self)
   })
 }
+
+VL$set("public", "tooltip", function(...){
+  if (!length(list(...)) && length(private$inner$encoding)){
+    l <- lapply(private$inner$encoding, function(d){
+      d <- d[vl_tooltip_props]
+      d[!is.na(names(d))]
+    })
+    names(l) <- NULL
+    l <- list(l)
+  }
+  else {
+    l <- list(lapply(list(...), check_encoding))
+  }
+  names(l) <- "tooltip"
+  private$inner$encoding <- append(private$inner$encoding, l)
+  invisible(self)
+})
+
+VL$set("public", "show", function(){
+  private$update_spec()
+  private$spc
+})
 
 #view specs
 for (i in vl_prop$view_spec){
@@ -180,3 +203,10 @@ VL$set("public", "repeat_row_column", function(row, column){
   private$add_prop(l)
   invisible(self)
 })
+
+VL$set("private", "validate", function(){
+  s <- check_vl_spec(private$spc)
+  s <- jsonlite::toJSON(s, auto_unbox = TRUE)
+  validate_schema(s)
+})
+
