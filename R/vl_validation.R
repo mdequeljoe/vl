@@ -1,4 +1,9 @@
 validate_schema <- function(spec){
+
+  warn <- getOption("vl.warnings", default = TRUE)
+  if (!warn)
+    return(invisible())
+
   cx <- V8::v8()
   cx$source(system.file("htmlwidgets/lib/validation/ajv.min.js", package = "vl"))
   cx$source(system.file("htmlwidgets/lib/validation/vega-lite-schema.min.js", package = "vl"))

@@ -141,11 +141,6 @@ VL$set("public", "tooltip", function(...){
   invisible(self)
 })
 
-VL$set("public", "show", function(){
-  private$update_spec()
-  private$spc
-})
-
 #view specs
 for (i in vl_prop$view_spec){
   VL$set("public", i, function(...){
