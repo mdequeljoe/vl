@@ -5,7 +5,9 @@ function validateVl(spec){
   return v ? v : validate.errors;
 }  
 
-function compileSpec(spec){
-  var vgSpec = vl.compile(spec).spec;
-  return vgSpec;
+function logVegaWarnings(spec){
+  var log = [];
+  var logger = {warn: function(m){ log.push(m)}};
+  var vspec = vl.compile(spec, {logger: logger}).spec;
+  return log;
 }
