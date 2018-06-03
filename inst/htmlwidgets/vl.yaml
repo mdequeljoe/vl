@@ -7,7 +7,7 @@ dependencies:
      - promise.min.js
      - vega.js
   - name: vega-lite
-    version: 2.4.3
+    version: 2.5.1
     src: htmlwidgets/lib/vega-lite
     script: vega-lite.min.js
   - name: vega-embed

@@ -63,4 +63,12 @@ test_that("vl's `this_call` works in functions",{
   expect_equal(names(air()), c("data", "mark", "encoding", "$schema"))
 })
 
-
+l <- vl::vl()$
+  data(mtcars)$
+  tick()$
+  x("mpg")$
+  as_spec("JSON")
+l <- suppressWarnings(vl:::validate_schema(l))
+test_that("vl validation returns list when warnings are signalled",{
+  expect_true(is.list(l))
+})
