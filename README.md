@@ -1,5 +1,5 @@
 # vl 
-vl provides a lightweight R6 interface for writing vega-lite specifications. Inspired mainly by [to-vega](https://github.com/gjmcn/to-vega), vl can be thought of as a way to write the JSON equivalent spec in short-form notation.
+vl provides an R6 interface for writing, validating, and parsing vega-lite specifications. Inspired mainly by [to-vega](https://github.com/gjmcn/to-vega), vl can be thought of as a way to write the JSON equivalent spec in short-form notation.
 
 ```r
 vl::vl()$
@@ -12,7 +12,7 @@ vl::vl()$
 ```
 ![](man/img/Cars.png)
 
-vl tries to find the middle ground between writing specs via an interface (instead of writing out the equivalent R list object) without abstracting too far away from the underlying JSON syntax. This complements the existing R htmlwidgets package, [vegalite](https://github.com/hrbrmstr/vegalite), which provides a great `%>%`-able api.
+vl tries to find a middle ground between writing specs via an interface (instead of writing out the equivalent R list object) without abstracting too far away from the underlying JSON syntax. This complements the existing R htmlwidgets package, [vegalite](https://github.com/hrbrmstr/vegalite), which provides a great `%>%`-able api.
 
 ## Install
 
@@ -23,10 +23,6 @@ devtools::install_github("mdequeljoe/vl")
 ```
 
 ## Usage
-vl uses:
-
-[vega-lite](https://github.com/vega/vega-lite) v.2.4.3  
-[vega-embed](https://github.com/vega/vega-embed) v.3.9.0
 
 A new vl environment can be initiated with `vl`. 
 
@@ -34,50 +30,51 @@ A new vl environment can be initiated with `vl`.
 v <- vl::vl()
 ```
 
-Data can be attached to the current view via `data` as a dataframe, local file, or url. To refer to a vega dataset url, prefix the file name with `!`. 
+A vl specification can be validated and parsed with `plot`. The validation is the same as in the [vega-editor](https://vega.github.io/editor/#/). `as_spec` returns the current specification as a list or JSON. vl can also be used in shiny apps with `renderVl` and `vlOutput`.
 
-A vl specification can be parsed with `plot`. The vl print method also plots the current vl specification. `as_spec` returns the current specification as a list or JSON. vl can be used in shiny with `renderVl` and `vlOutput`.
+[embed](https://github.com/vega/vega-embed) options can be passed with `embed`. For instance, this can be used to set a vega-theme. Note that by default actions are turned off.
 
 ### View specifications 
 
-View specifications can be set with one or more of the following: `description`, `title`, `width`, `height`, `name`, `background`, `padding`, `autosize`, `config`, `selection`, `facet`, `repeat_row`, `repeat_column`,
-`repeat_row_column`, `transform`
+View specifications can be set with one or more of the following: `description`, `title`, `data`, `transform`, `width`, `height`, `name`, `background`, `padding`, `autosize`, `config`, `selection`, `facet`, `repeat_row`, `repeat_column`,
+`repeat_row_column`
 
-These methods accept relevant their properties/parameters as arguments and are applied to the current view. When a parameter is passed as an unnamed vector this applies to the current method, `title("hi this is a title")`, otherwise named vectors will set the properties of the current method `title(text = "hi again", anchor = "start")`.
+Data can be attached to the current view via `data` as a dataframe, local file, or url. To refer to a vega dataset url, prefix the file name with a `!`. 
+
+These methods accept relevant their properties/parameters as arguments and are applied to the current view. For properties that accept either a string type or parameter objects, passing an unnamed vector will be taken as the string type. For instance `title("a title")` would be specified as `title(text = "a title", anchor = "start")` when additional arguments are passed in.
 
 Note that `repeat_row`, `repeat_column`, `repeat_row_column` refer to [repeat](https://vega.github.io/vega-lite/docs/repeat.html) in order to avoid clashing with `base::repeat` 
 
 
 ### Mark
 
-Specify a mark as one of `area`, `bar`, `circle`, `line`, `point`, `rect`, `rule`, `square`, `text`, `tick`, `geoshape`, `trail`
+Specify a mark as one of `area`, `bar`, `circle`, `line`, `point`, `rect`, `rule`, `square`, `text`, `tick`, `geoshape`, `trail`, `box_plot`
 
 These methods accept any optionally specified properties relevant to that mark. For instance, `text(align = 'left', dx = 100, dy = -5)` See the official [docs](https://vega.github.io/vega-lite/docs/mark.html) for details on mark-specific properties.
-
 
 ### Encoding
 
 Specify an encoding channel as one of  `x`, `y`, `x2`, `y2`, `color`, `opacity`, `size`, `shape`, `label`, `tooltip`, `href`, `order`, `detail`, `row`, `column`.
 
+Note that `label` refers to the [text](https://vega.github.io/vega-lite/docs/text.html) encoding to avoid a clash with the `text` mark. 
+
 When an encoding is specified, it applies to the preceding mark of the current view. The encoding type can be specified [altair](https://altair-viz.github.io/user_guide/encoding.html) style, `x(field = "var:Q")`, short-form style,
 `x(field = "var", type = "Q")` or in full form notation `x(field = "var", type = "quantitative")` for those who like extra typing. If the first argument is unnamed it is set as the field property.
 
-Note that `label` refers to the [text](https://vega.github.io/vega-lite/docs/text.html) encoding to avoid a clash with the `text` mark. 
-
-To include multiple fields in a tooltip, list them individually:
+if `tooltip` is specified with no arguments then it will be parsed with the fields specified
+in the previous encodings of the current mark. 
 
 ```r
 vl::vl()$
-  data("!cars.json")$
+  data(mtcars)$
   point()$
-  x("Horsepower:Q")$
-  y("Miles_per_Gallon:Q")$
-  tooltip(
-    list("Horsepower:Q"),
-    list("Miles_per_Gallon:Q")
-  )$
+    x("hp:Q")$
+    y("mpg:Q")$
+    tooltip()$
   plot()
 ```
+
+Multiple fields not previously used as encodings can be shown in a tooltip by passing them as seperate lists.
 
 ### View compositions
 
@@ -90,7 +87,7 @@ To add a composition to an existing composition use `add_view`.
 To take an [example](https://bl.ocks.org/g3o2/bd4362574137061c243a2994ba648fb8):
 
 ```r
-v <- vl()
+v <- vl::vl()
 v$data("!cars.json")$
   hconcat()$
   tick()$
@@ -111,9 +108,6 @@ v$data("!cars.json")$
 ```
 ![](man/img/Cars_dash.png)
 
-### Embed
-
-Pass any [embed](https://github.com/vega/vega-embed) options with `embed`. Note that by default actions are turned off.
 
 ## Related
 
