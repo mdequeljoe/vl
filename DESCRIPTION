@@ -8,6 +8,7 @@ Authors@R: c(
       person("Arvind", "Satyanarayan", comment = "Vega-Lite library", role = c("aut")),
       person("Kanit", "Wongsuphasawat,", comment = "Vega-Lite library", role = c("aut")),
       person("Mike", "Bostock", comment = "D3 library", role = c("aut")),
+      person("Evgeny", "Poberezkin", comment = "ajv library", role = c("aut")),
       person("Alicia", "Schep", comment = "Vega-embed modification for inline rendering in RStudio", role = c("ctb"))
       )
 Description: An R6 interface for writing, validating, and parsing Vega-Lite JSON specifications. It provides
@@ -15,7 +16,7 @@ Description: An R6 interface for writing, validating, and parsing Vega-Lite JSON
     from the underlying Vega-Lite JSON syntax. Parsing a specification generates the corresponding visualisation
     as an htmlwidget.
 Imports:
-  htmlwidgets, jsonlite, R6, V8
+  htmlwidgets, jsonlite, R6, V8, utils
 Suggests:
   knitr,
   rmarkdown,
@@ -24,3 +25,4 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
+VignetteBuilder: knitr
