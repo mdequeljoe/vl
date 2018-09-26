@@ -13,8 +13,8 @@ vl_tooltip_props <- c("field", "type", "timeUnit", "bin", "aggregate",
 
 #' vl, a Vega-Lite environment
 #'
-#' Provides an interface to building Vega-Lite JSON specifications that stays
-#' close to the underlying JSON syntax. In this way, vl can be used to write
+#' Provides an interface to building, validating, and parsing Vega-Lite JSON specifications
+#' that stays close to the underlying JSON syntax. In this way, vl can be used to easily write
 #' specifications in a short-form notation.
 #'
 #' @section Usage: \preformatted{v <- vl()}
@@ -49,12 +49,18 @@ vl_tooltip_props <- c("field", "type", "timeUnit", "bin", "aggregate",
 #' \subsection{encoding}{
 #' Specify an encoding channel as one of \code{x, y, x2, y2, color, opacity, size, shape,
 #'  label, tooltip, href, order, detail, row, column}.
-#' When an encoding is specified, it applies to the preceding mark of the current view.
-#'  The encoding type can be specified altair style, x(field = "var:Q"),
-#'  short-form style, x(field = "var", type = "Q") or in full form notation x(field = "var", type = "quantitative").
+#'
 #'  If the first argument is unnamed it is set as the field property.
+#'
+#' When an encoding is specified, it applies to the preceding mark of the current view.
+#'  The encoding type can be declared by concatenating it to the field via ':', \code{x(field = "var:Q")},
+#'  or by short-form style, \code{x(field = "var", type = "Q")} or in full form notation \code{x(field = "var", type = "quantitative")}.
+#'
+#' if \code{tooltip} is specified with no arguments then by default it will show the fields specified
+#' in the previous encodings of the current mark. Multiple fields can be shown in a tooltip by passing them
+#' as seperate lists.
+#'
 #' Note that label refers to the text encoding to avoid a clash with the text mark.
-#' To include multiple fields in a tooltip, list them individually:
 #' }
 #' \subsection{view composition}{
 #' View compositions can be set with \code{layer, hconcat, vconcat, spec}.
