@@ -1,6 +1,6 @@
 Package: vl
 Title: R6 interface for writing and parsing Vega-Lite specifications
-Version: 0.0.1
+Version: 0.1.0
 Authors@R: c(
       person("Matthew", "de Queljoe", email = "matthew.dequeljoe@gmail.com", role = c("aut", "cre")),
       person("Jeffrey", "Heer", comment = "Vega-Lite library", role = c("aut")),
