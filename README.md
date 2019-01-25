@@ -1,4 +1,7 @@
 # vl 
+
+[![Build Status](https://travis-ci.org/mdequeljoe/vl.svg?branch=master)](https://travis-ci.org/mdequeljoe/vl)
+
 vl provides an R6 interface for writing, validating, and parsing vega-lite specifications. Inspired mainly by [to-vega](https://github.com/gjmcn/to-vega), vl can be thought of as a way to write the JSON equivalent spec in short-form notation.
 
 ```r
